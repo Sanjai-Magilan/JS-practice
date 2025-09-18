@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
-require("dotenv").config();
+import dotenv from "dotenv"
+dotenv.config();
 const connectDB = async () => {
   console.log("connecting to data base,....");
   try {
-    mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connection Done ✅");
   } catch (e) {
-    console.log("Eror occuried");
+    console.log("Connection failed Eror occuried");
     throw e;
   }
 };
