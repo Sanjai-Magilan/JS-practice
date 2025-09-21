@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv"
-dotenv.config();
+dotenv.config({ path: "./BasicExpress/.env" });
 const connectDB = async () => {
   console.log("connecting to data base,....");
   try {

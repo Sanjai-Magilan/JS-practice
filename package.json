@@ -5,6 +5,7 @@
   "main": "StringReverse.js",
   "type": "module",
   "scripts": {
+    "dev":"nodemon BasicExpress/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,6 +14,7 @@
   "dependencies": {
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.1",
     "nodemon": "^3.1.10"
   }
