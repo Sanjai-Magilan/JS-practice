@@ -1,6 +1,8 @@
 import schem from "../models/Schema.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 export default {
   home: (req, res) => res.status(200).send("Hello World"),
 
@@ -8,7 +10,7 @@ export default {
 
   addUser: async (req, res) => {
     try {
-      const hashedPass = await bcrypt.hash(req.body.UserPass, 10);
+      const hashedPass = await bcrypt.hash(req.body.UserPass, 10);    //hashing user pass with salt
       const userInfo = new schem({ ...req.body, UserPass: hashedPass });
       await userInfo.save();
       res.status(201).send(userInfo);
@@ -26,10 +28,11 @@ export default {
     const info = req.body;
     try {
       const found = await schem.findOne({ UserId: info.UserId });
-      console.log(found)
-      if ((found == null)) res.status(404).send("user not found");
-      if (await bcrypt.compare(req.body.UserPass, found.UserPass))
-        res.status(200).send("loggedin successfully");
+      if (found == null) res.status(404).send("user not found");
+      if (await bcrypt.compare(req.body.UserPass, found.UserPass)) {
+        const accessToken = jwt.sign({UserName : info.UserName},process.env.ACCESS_TOKEN);                 //pay load should be object
+        res.status(200).json({accessToken : accessToken});
+      }
     } catch (e) {
       res.status(500).send(e);
     }
