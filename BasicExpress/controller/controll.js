@@ -1,13 +1,18 @@
 import schem from "../models/Schema.js";
+import bcrypt from "bcrypt";
 export default {
   home: (req, res) => res.status(200).send("Hello World"),
 
   user: (req, res) => res.status(200).send(`hello, ${req.params.name}`),
 
   addUser: async (req, res) => {
-    const userInfo = new schem({ ...req.body });
-    await userInfo.save();
-    res.status(201).send(userInfo);
+    try {
+      const salt = await bcrypt.genSalt();
+      const hashedPass = await bcrypt.hash(req.body.UserPass, salt);
+      const userInfo = new schem({ ...req.body, UserPass: hashedPass });
+      await userInfo.save();
+      res.status(201).send(userInfo);
+    } catch {res.status(500).send()}
   },
 
   get: async (req, res) => {
@@ -19,7 +24,8 @@ export default {
     const info = req.body;
     try {
       const found = await schem.findOne({ UserId: info.UserId });
-      if (found.UserPass == info.UserPass) res.status(200).send("loggedin successfully");
+      if (found.UserPass == info.UserPass)
+        res.status(200).send("loggedin successfully");
       else res.status(404).send("user not found");
     } catch (e) {
       res.status(500).send(e);
