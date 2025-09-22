@@ -7,8 +7,7 @@ export default {
 
   addUser: async (req, res) => {
     try {
-      const salt = await bcrypt.genSalt();
-      const hashedPass = await bcrypt.hash(req.body.UserPass, salt);
+      const hashedPass = await bcrypt.hash(req.body.UserPass, 10);
       const userInfo = new schem({ ...req.body, UserPass: hashedPass });
       await userInfo.save();
       res.status(201).send(userInfo);
