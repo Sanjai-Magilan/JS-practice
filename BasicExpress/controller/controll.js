@@ -11,7 +11,9 @@ export default {
       const userInfo = new schem({ ...req.body, UserPass: hashedPass });
       await userInfo.save();
       res.status(201).send(userInfo);
-    } catch {res.status(500).send()}
+    } catch {
+      res.status(500).send();
+    }
   },
 
   get: async (req, res) => {
@@ -23,9 +25,10 @@ export default {
     const info = req.body;
     try {
       const found = await schem.findOne({ UserId: info.UserId });
-      if (found.UserPass == info.UserPass)
+      console.log(found)
+      if ((found == null)) res.status(404).send("user not found");
+      if (await bcrypt.compare(req.body.UserPass, found.UserPass))
         res.status(200).send("loggedin successfully");
-      else res.status(404).send("user not found");
     } catch (e) {
       res.status(500).send(e);
     }
