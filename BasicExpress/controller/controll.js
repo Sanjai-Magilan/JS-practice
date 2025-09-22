@@ -1,5 +1,6 @@
 import schem from "../models/Schema.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 export default {
   home: (req, res) => res.status(200).send("Hello World"),
 
