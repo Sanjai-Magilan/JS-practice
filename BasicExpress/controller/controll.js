@@ -15,6 +15,17 @@ export default {
     res.status(200).send(info);
   },
 
+  signin: async (req, res) => {
+    const info = req.body;
+    try {
+      const found = await schem.findOne({ UserId: info.UserId });
+      if (found.UserPass == info.UserPass) res.status(200).send("loggedin successfully");
+      else res.status(404).send("user not found");
+    } catch (e) {
+      res.status(500).send(e);
+    }
+  },
+
   delete: async (req, res) => {
     try {
       const del = req.params.UserId;
