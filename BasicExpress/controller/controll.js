@@ -31,8 +31,8 @@ export default {
       const found = await schem.findOne({ UserId: info.UserId });
       if (found == null) res.status(404).send("user not found");
       if (await bcrypt.compare(req.body.UserPass, found.UserPass)) {
-        jwt.sign({ UserName: info.UserName, UserRoll: info.UserRoll }, process.env.ACCESS_TOKEN); //pay load should be object
-        res.status(200).json("Login successfull");
+        const auth=jwt.sign({ UserName: info.UserName, UserRoll: info.UserRoll }, process.env.ACCESS_TOKEN); //pay load should be object
+        res.status(200).json({ Authentication: auth});
       } else {
         res.status(401).send("Incorrect password");
       }
