@@ -11,7 +11,7 @@ export default {
 
   addUser: async (req, res) => {
     try {
-      const hashedPass = await bcrypt.hash(req.body.UserPass, 10);    //hashing user pass with salt
+      const hashedPass = await bcrypt.hash(req.body.UserPass, 10); //hashing user pass with salt
       const userInfo = new schem({ ...req.body, UserPass: hashedPass });
       await userInfo.save();
       res.status(201).send(userInfo);
@@ -31,8 +31,10 @@ export default {
       const found = await schem.findOne({ UserId: info.UserId });
       if (found == null) res.status(404).send("user not found");
       if (await bcrypt.compare(req.body.UserPass, found.UserPass)) {
-        const accessToken = jwt.sign({UserName : info.UserName},{UserRoll:info.UserRoll},process.env.ACCESS_TOKEN);                 //pay load should be object
-        res.status(200).json({accessToken : accessToken});
+        jwt.sign({ UserName: info.UserName, UserRoll: info.UserRoll }, process.env.ACCESS_TOKEN); //pay load should be object
+        res.status(200).json("Login successfull");
+      } else {
+        res.status(401).send("Incorrect password");
       }
     } catch (e) {
       res.status(500).send(e);
