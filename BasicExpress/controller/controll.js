@@ -45,6 +45,29 @@ export default {
     }
   },
 
+  update: async (req, res) => {
+    try {
+      const updates = {
+        UserName: req.body.UserName,
+        Role: req.body.Role,
+      };
+
+      if (req.body.UserPass) {
+        updates.UserPass = await bcrypt.hash(req.body.UserPass, 10);
+      }
+
+      const updatedDoc = await schem.findOneAndUpdate(
+        { UserId: Number(req.body.UserId) },
+        updates,
+        { new: true, runValidators: true }
+      );
+      if (updatedDoc) res.status(200).send("updated successfully");
+      else res.status(404).send("user not found");
+    } catch (err) {
+      res.status(500).send("server error");
+    }
+  },
+
   delete: async (req, res) => {
     try {
       const del = req.params.UserId;
